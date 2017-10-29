@@ -1,10 +1,12 @@
+// This exercise helped me to formulate a better understanding of JQuery by forging my own path
+// Following instructions implicitly never was my strong suit...
 var MatchGame = {};
 /*
   Sets up a new game after HTML document has loaded.
-  Renders a 4x4 board of cards.
+  Renders a 4x4 board of cards.     // it doesn't the board is never cleared in my HTML. Values are added instead.
 */
 $(document).ready( function(){
-  MatchGame.renderCards(MatchGame.generateCardValues());
+  MatchGame.renderCards(MatchGame.generateCardValues());  // this function adds class and innerHTML to the existing divs
   var clickCount = 0;                                // obvious?
   var floatingValue = 0;                             // this is where we save the value of the first card we've clicked 
   var matchValue = 0;                                // this will be the value of the second card   
@@ -32,7 +34,6 @@ $(document).ready( function(){
       },500);
 
       setTimeout(function() {
-      $card.css("border-color","white");             // returns the border color to it's initial state
       $(".mask").css("z-index","0");                 // hides the mask div back behind all the rest
     	if (clickCount === 1) {                        // if it's the first card flipped
     		floatingValue = $card.attr("class")[14];     // we are assigning this variable the value of the fifteenth character of the active card's class which is it's number value but as a string
@@ -43,11 +44,11 @@ $(document).ready( function(){
         matchValue = $card.attr("class")[14];        // the fifteenth index of the card's class it also it's value 
     		if (floatingValue === matchValue) {          // if the two card value variables are equal we have a match 
     			$(".card."+matchValue).addClass("matched").removeClass("flipped").css("background-color","lightgray"); // toggles the matched class for flipped class and sets the background color grey
-      		var gameOver = true;                      // this variable is instantiated to false and if it makes it through the next loop the game's continues
-      		if($(".card").hasClass("unflipped")) {
-            gameOver = false;
+      		var gameOver = true;                       // this variable is instantiated to true and if it makes it through the next test the game continues
+      		if($(".card").hasClass("unflipped")) {     // if any of the card classes are unflipped 
+            gameOver = false;                        // the game can't be over 
           }
-      		if (gameOver === true) {                   // if we made it through the loop and no cards are still face down 
+      		if (gameOver === true) {                   // if we made it through the check and no cards are still face down 
      				alert("You win!");                       // a helpful message to inform the player of their accomplishment
      				location.reload();                       // starts a new game  
       		}      		
@@ -55,6 +56,7 @@ $(document).ready( function(){
     			setTimeout(function() {                    // wait half a second so we get a chance to see what was under the second card
       			$(".card."+matchValue).removeClass("flipped").addClass("unflipped").css("background-color","rgb(32, 64, 86)");  // flip the second card over
       			$(".card."+floatingValue).removeClass("flipped").addClass("unflipped").css("background-color","rgb(32, 64, 86)");  // flip the first card over
+            $card.css("border-color","white");       // returns the border color to it's initial state
       		},pause);                                  // this value determins how long the second card is visible
     		}
     	}},600);
@@ -88,7 +90,7 @@ MatchGame.renderCards = function(cardValues, $game) {
 	$(".card").each(function() {                           // selector .each() loops through each instance of a selector 
 		var x = cardValues.pop();                            // takes a value out of the array we generated and assigns it to this variable
 		$(this).html(x);   // adds the value x and "unflipped" to the class of a div nested inside each .card
-    $(this).addClass(x+" ");
+    $(this).addClass(x+" "); //interestingly this would not take the class without the string added
     $(this).addClass("unflipped");
 	});
 
